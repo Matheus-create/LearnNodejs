@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const connectToDatabase = async () => {
+  // console.log(process.env.MONGODB_URL);
   await mongoose.connect(
-    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.jfalnwi.mongodb.net/database?retryWrites=true&w=majority`,
+    `mongodb+srv://testUser:H9G7viSrFg1BHZO1@learnnodejs.kvj0qmc.mongodb.net/?retryWrites=true&w=majority`,
     (error) => {
       if (error) {
         return console.log(
@@ -11,7 +12,7 @@ const connectToDatabase = async () => {
         );
       }
 
-      return console.log("Conexão com o bando de dados realizada com sucesso!");
+      return console.log("Conexão com o banco de dados realizada com sucesso!");
     }
   );
 };
