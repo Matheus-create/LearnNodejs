@@ -11,6 +11,6 @@ connectToDatabase();
 // require("./modules/path")
 //require("./modules/fs");
 //require("./modules/http");
-//require("./modules/express");
+require("./modules/express");
 
 //const person = new Person("Matheus");
