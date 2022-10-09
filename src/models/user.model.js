@@ -2,7 +2,7 @@ const { constants } = require("buffer");
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  fisrName: {
+  firstName: {
     type: String,
     required: true,
   },

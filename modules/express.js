@@ -3,37 +3,82 @@ const UserModel = require("../src/models/user.model");
 
 const app = express();
 
+//usar o ejs
+app.set("view engine", "ejs");
+app.set("views", "src/views");
+
 app.use(express.json());
 
-app.get("/home", (req, res) => {
-  // res.contentType("application/html");
-  // res.status(200).send("<h1>hello world!</h1>");
-  res.writeHead(200, { "Content-type": "text/html" });
-  res.end("<h1> Hello, world! </h1>");
+//middleware
+app.use((req, res, next) => {
+  console.log(`Request Type: ${req.method}`);
+  console.log(`Content Type: ${req.headers["content-type"]}`);
+  console.log(`Date: ${new Date()}`);
+
+  next();
 });
 
-app.get("/users", (req, res) => {
-  const users = [
-    {
-      name: "John Doe",
-      email: "john@doe.com",
-    },
-    {
-      name: "Jane Doe",
-      email: "jane@doe.com",
-    },
-  ];
-
-  res.status(200).json(users);
+//end point ejs
+app.get("/views/users", async (req, res) => {
+  const user = await UserModel.find({});
+  res.render("index", { users: user });
 });
 
+//end point para pegar todos usuarios
+app.get("/users", async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+
+    res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+});
+
+//end point para pegar um usario por id
+app.get("/users/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const user = await UserModel.findById(id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+});
+
+// criar um usuario
 app.post("/users", async (req, res) => {
   try {
-    const user = await UserModel.creat(req.body);
-
-    res.status(201).send.json(user);
+    const user = await UserModel.create(req.body);
+    res.status(201).json(user);
   } catch (error) {
     res.status(500).send(error.message);
+  }
+});
+
+// atualizar um usuario
+
+app.patch("/users/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await UserModel.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+//deletar um usuario
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await UserModel.findByIdAndRemove(id);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).send(error.message);
   }
 });
 
